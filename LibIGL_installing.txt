@@ -1,0 +1,50 @@
+For windows:
+1.Download 
+
+    1.LibIGL: https://github.com/libigl/libigl.git (header only / compilable)
+    2.Eigen: http://bitbucket.org/eigen/eigen/get/3.3.1.zip (header only)
+    3.FreeGLUT: http://www.transmissionzero.co.uk/software/freeglut-devel/ (These are binaries already)
+    4.GLEW: http://glew.sourceforge.net/ (Binaries!)
+    5.GLFW: http://www.glfw.org/download.html (pre-compiled binaries for your platform, e.g. Windows 64-bit binaries?)
+    6.Maybe: Windows SDK
+
+7.Create new Win32 Console Application, Build type: Release, Platform: x64
+8.Extract the above to ${SolutionDir}/3rdparty
+9.Configure project:
+
+    1.To "Project properties - VC++ Directories - Include Directories" add the following:
+        1.$(SolutionDir)\3rdparty\eigen
+        2.$(SolutionDir)\3rdparty\libigl-master\include
+        3.$(SolutionDir)\3rdparty\freeglut\include
+        4.$(SolutionDir)\3rdparty\glew-2.0.0\include
+        5.$(SolutionDir)\3rdparty\glfw-3.2.1.bin.WIN64\include
+    2.To "Project properties - VC++ Directories - Library Directories" add the following:
+        1.$(SolutionDir)\3rdparty\freeglut\lib\x64
+        2.$(SolutionDir)\3rdparty\glew-2.0.0\lib\Release\x64
+        3.$(SolutionDir)\3rdparty\glfw-3.2.1.bin.WIN64\lib-vc2015\
+    3.To "Project properties - Linker - Additional dependencies" add the following:       
+        1.glfw3.lib       
+        2.glew32.lib
+        3.freeglut.lib
+        4.opengl32.lib
+    4.To "C/C++ - Preprocessor - Preprocessor Definitions" add the following:
+        1._USE_MATH_DEFINES (to enable M_PI)
+        2._CRT_SECURE_NO_WARNINGS (fopen and sscanf are apparently insecure to use according to MS)
+    5.Set "General - Character Set" to Not Set
+        See http://stackoverflow.com/a/3925049 (LPWSTRING vs. const char*)
+    6.To "Post-build event" add the following:
+        copy "$(SolutionDir)3rdparty\glfw-3.2.1.bin.WIN64\lib-vc2015\glfw3.dll" "$(TargetDir)"
+        copy "$(SolutionDir)3rdparty\glew-2.0.0\bin\Release\x64\glew32.dll" "$(TargetDir)"
+
+2.Fix compilation errors:
+
+    1.At the top of ViewerCore.cpp: 
+        1.#include <math.h>
+
+For linux:
+
+	git clone https://github.com/memononen/nanovg.git
+	cd nanovg
+	premake4 gmake
+	cd build
+	make
